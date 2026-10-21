@@ -5,7 +5,7 @@ import { RippleBadge } from "./MaterialTheme/styled";
 
 function App() {
   return (
-    <Container sx={{backgournd: "orange"}}>
+    <Container sx={{background: "orange"}}>
       <Stack direction="column">
         <Box sx={{my:4}}>
           <Typography variant="h4" component={"h4"}>
