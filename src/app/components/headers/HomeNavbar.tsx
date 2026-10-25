@@ -47,10 +47,10 @@ export function HomeNavbar() {
             <Box className={"hover-line"}>
               <NavLink to="/help" activeClassName={"underline"}>Help</NavLink>
             </Box>
+            {/* Basket */}
             <Box className={"hover-line"}>
               <NavLink to="/help" activeClassName={"underline"}><img src="/icons/shopping-cart.svg"/></NavLink>
             </Box>
-            {/* Basket */}
 
             {!authMember ? (
               <Box>
