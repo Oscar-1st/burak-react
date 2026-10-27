@@ -25,7 +25,7 @@ export default function PopularDishes() {
           <Stack className="cards-frame">
             {list.map((ele, index) => {
               return (
-                <CssVarsProvider key={index}>
+                <CssVarsProvider key={index}> {/*allow us to use joy material insideemus*/}
                   <Card className="card">
                     <CardCover>
                       <img src={ele.imagePath} alt="" />
