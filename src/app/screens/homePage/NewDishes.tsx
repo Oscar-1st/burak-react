@@ -2,7 +2,6 @@ import React from "react";
 import { Box, Container, Stack } from "@mui/material";
 import AspectRatio from "@mui/joy/AspectRatio";
 import Card from "@mui/joy/Card";
-import Cardoverflow from "@mui/joy/CardOverflow";
 import Typography from "@mui/joy/Typography";
 import { CssVarsProvider } from "@mui/joy/styles";
 import VisibilityIcon from "@mui/icons-material/Visibility";
