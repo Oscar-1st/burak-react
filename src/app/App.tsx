@@ -13,6 +13,7 @@ import  Footer  from "./components/footer";
 import "../css/app.css";
 import "../css/navbar.css";
 import "../css/footer.css"
+import Test from "./screens/Test";
 
 function App() {
 const location = useLocation(); 
@@ -35,7 +36,7 @@ console.log("location",location);
             <HelpPage />
           </Route>
           <Route path="/"> {/*always put "/" at last in Sswitch*/}
-            <HomePage />
+            <Test />
           </Route>
         </Switch>
         <Footer/>
