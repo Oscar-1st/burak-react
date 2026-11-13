@@ -8,7 +8,7 @@ export interface AppRootState {
 
 /* HOMEPAGE SC => define homepage state type */
 export interface HomePageState { 
-  popularDIshes: Product[];
+  popularDishes: Product[];
   newDishes: Product[];
   topUsers: Member[];
 }
