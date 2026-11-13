@@ -23,8 +23,9 @@ const homePageSlice = createSlice({
     },
   },
 });
-
-// exporting reducers to be used in store.ts
+// why do we export actions? => because we need to use these actions in the component to dispatch data to store
 export const { setPopularDishes, setNewDishes, setTopUsers } = homePageSlice.actions;
+
+// why do we export reducer? => because we need to import this reducer in store.ts to use it in store
 const HomePageReducer = homePageSlice.reducer;
 export default HomePageReducer;
