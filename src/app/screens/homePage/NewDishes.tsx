@@ -8,14 +8,21 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import Divider from "../../components/divider";
 import CardOverflow from "@mui/joy/CardOverflow";
 
-const newDishes = [
-  { productName: "Cutlet", imagePath: "/img/cutlet.webp" },
-  { productName: "Kebab", imagePath: "/img/kebab-fresh.webp" },
-  { productName: "Kebab", imagePath: "/img/kebab.webp" },
-  { productName: "Lavash", imagePath: "/img/lavash.webp" },
-];
+import { useSelector } from "react-redux";
+import { createSelector } from "reselect";
+import { retrieveNewDishes } from "./selector";
+import { serverApi } from "../../../lib/config";
+import { ProductCollection } from "../../../lib/enums/product.enum";
+import { Product } from "../../../lib/types/product";
+
+/* RREDUX SLICE & SELECTOR */
+const newDishesRetriever = createSelector(retrieveNewDishes, (newDishes) => ({
+  newDishes,
+}));
 
 export default function NewDishes() {
+  const { newDishes } = useSelector(newDishesRetriever);
+
   return (
     <div className="new-products-frame">
       <Container>
@@ -24,37 +31,44 @@ export default function NewDishes() {
           <Stack className="cards-frame">
             <CssVarsProvider>
               {newDishes.length !== 0 ? (
-                newDishes.map((ele, index) => {
-                return (
-                  <Card key={index} variant="outlined" className="card">
-                    <CardOverflow>
-                      <div className="product-size">Normal size</div>
-                      <AspectRatio ratio="1">
-                        <img src={ele.imagePath} alt="" />
-                      </AspectRatio>
-                    </CardOverflow>
-                    <CardOverflow variant="soft" className="product-detail">
-                      <Stack className="info">
-                        <Stack flexDirection={"row"}>
-                          <Typography className={"title"}>
-                            {ele.productName}
-                          </Typography>
-                          <Divider width="2" height="24" bg="#d9d9d9" />
-                          <Typography className={"price"}>$12</Typography>
+                newDishes.map((ele: Product) => {
+                  const imagePath = `${serverApi}/${ele.productImages[0]}`;
+                  const sizeVolume =
+                    ele.productCollection === ProductCollection.DISH
+                      ? ele.productSize + "size"
+                      : ele.productVolume + "L";
+                  return (
+                    <Card key={ele._id} variant="outlined" className="card">
+                      <CardOverflow>
+                        <div className="product-size">{sizeVolume}</div>
+                        <AspectRatio ratio="1">
+                          <img src={imagePath} alt="" />
+                        </AspectRatio>
+                      </CardOverflow>
+                      <CardOverflow variant="soft" className="product-detail">
+                        <Stack className="info">
+                          <Stack flexDirection={"row"}>
+                            <Typography className={"title"}>
+                              {ele.productName}
+                            </Typography>
+                            <Divider width="2" height="24" bg="#d9d9d9" />
+                            <Typography className={"price"}>
+                              ${ele.productPrice}
+                            </Typography>
+                          </Stack>
+                          <Stack>
+                            <Typography className={"views"}>
+                              {ele.productViews}
+                              <VisibilityIcon
+                                sx={{ fontSize: 20, marginLeft: "5px" }}
+                              />
+                            </Typography>
+                          </Stack>
                         </Stack>
-                        <Stack>
-                          <Typography className={"views"}>
-                            20
-                            <VisibilityIcon
-                              sx={{ fontSize: 20, marginLeft: "5px" }}
-                            />
-                          </Typography>
-                        </Stack>
-                      </Stack>
-                    </CardOverflow>
-                  </Card>
-                )
-              })
+                      </CardOverflow>
+                    </Card>
+                  );
+                })
               ) : (
                 <Box className="no-data">New products are not available!</Box>
               )}
