@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { HomePageState } from '../../../lib/types/screen';
 
-const initialState: HomePageState = {
+const initialState: HomePageState = { 
+  // initialState vazifasi: bu state ning boshlang'ich qiymatini belgilash uchun ishlatiladi, ya'ni dastur ishga tushganda state qanday bo'lishini belgilaydi.
   popularDishes: [],
   newDishes: [],
   topUsers: [],
