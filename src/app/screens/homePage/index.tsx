@@ -7,36 +7,36 @@ import ActiveUsers from "./ActiveUsers";
 import Events from "./Events";
 import "../../../css/home.css";
 
-import { useDispatch, useSelector} from "react-redux";
-// why do we use useDispatch? => because we need to dispatch actions to the store, so we can update the state in the store
-import { Dispatch} from "@reduxjs/toolkit";
-// why do we need to use Dispatch? => because we need to define the type of dispatch, so we can use it in the component
-import { createSelector } from "reselect";
-import { setPopularDishes} from "./slice";
-import { retrievePopularDishes, retrieveNewDishes, retrieveTopUsers } from "./selector";
+import { useDispatch, } from "react-redux";
+import { Dispatch } from "@reduxjs/toolkit";
+import { setNewDishes, setPopularDishes } from "./slice";
 import { Product } from "../../../lib/types/product";
+import ProductService from "../../services/ProductService";
+import { ProductCollection } from "../../../lib/enums/product.enum";
 
 /* RREDUX SLICE & SELECTOR */
 const actionDispatch = (dispatch: Dispatch) => ({
-    setPopularDishes: (data: Product[]) => dispatch(setPopularDishes(data)),
-  });
-
-const popularDishesRetriever = createSelector(
-  retrievePopularDishes,
-  (popularDishes) => ({popularDishes})
-);
-  
+  setPopularDishes: (data: Product[]) => dispatch(setPopularDishes(data)),
+  setNewDishes: (data: Product[]) => dispatch(setNewDishes(data))
+});
 
 export default function HomePage() {
-  const { setPopularDishes } = actionDispatch(useDispatch());
-  const { popularDishes } = useSelector(popularDishesRetriever);
-
+  const { setPopularDishes, setNewDishes } = actionDispatch(useDispatch());
 
   useEffect(() => {
-  
+    const product = new ProductService();
+    product
+      .getProducts({
+        page: 1,
+        limit: 4,
+        order: "productViews",
+        productCollection: ProductCollection.DISH
+      })
+      .then((data) => {
+        setPopularDishes(data);
+      })
+      .catch((err) => console.log(err));
   }, []);
-
-  console.log("popularDishes:", popularDishes);
 
   return (
     <div className="homepage">
