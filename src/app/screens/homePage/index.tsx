@@ -23,7 +23,8 @@ const actionDispatch = (dispatch: Dispatch) => ({
 });
 
 export default function HomePage() {
-  const { setPopularDishes, setNewDishes, setTopUsers } = actionDispatch(useDispatch());
+  const { setPopularDishes, setNewDishes, setTopUsers } =
+    actionDispatch(useDispatch());
 
   useEffect(() => {
     const product = new ProductService();
@@ -46,18 +47,18 @@ export default function HomePage() {
         page: 1,
         limit: 4,
         order: "createdAt",
-        productCollection: ProductCollection.DISH,
       })
       .then((data) => {
         setNewDishes(data);
       })
       .catch((err) => console.log(err));
 
-    member.getTopUsers()
-    .then((data) => {
-      setTopUsers(data);
-    })
-    .catch((err) => console.log(err));
+    member
+      .getTopUsers()
+      .then((data) => {
+        setTopUsers(data);
+      })
+      .catch((err) => console.log(err));
   }, []);
 
   return (
