@@ -8,19 +8,26 @@ import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { Product } from "../../../lib/types/product";
+import { createSelector, Dispatch } from "@reduxjs/toolkit";
+import { useDispatch } from "react-redux";
+import { setProducts } from "./slice";
+import { retrieveProducts } from "./selector";
 
-const products = [
-  { productName: "Cutlet", imagePath: "/img/cutlet.webp" },
-  { productName: "Kebab", imagePath: "/img/kebab-fresh.webp" },
-  { productName: "Kebab", imagePath: "/img/kebab.webp" },
-  { productName: "Lavash", imagePath: "/img/lavash.webp" },
-  { productName: "Lavash", imagePath: "/img/lavash.webp" },
-  { productName: "Cutlet", imagePath: "/img/cutlet.webp" },
-  { productName: "Kebab", imagePath: "/img/kebab.webp" },
-  { productName: "Kebab", imagePath: "/img/kebab-fresh.webp" },
-];
+/* RREDUX SLICE & SELECTOR */
+const actionDispatch = (dispatch: Dispatch) => ({
+  setProducts: (data: Product[]) => dispatch(setProducts(data))
+});
+
+const productsRetriever= createSelector(
+  retrieveProducts,
+  (products) => products
+);
 
 export default function Products() {
+  const { setProducts } = actionDispatch(useDispatch());
+  const products = productsRetriever(useDispatch());
+
   return (
     <div className={"products"}>
       <Container>

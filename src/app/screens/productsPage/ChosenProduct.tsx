@@ -5,12 +5,40 @@ import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import Divider from "../../components/divider";
 import Button from "@mui/material/Button";
 import Rating from "@mui/material/Rating";
-import { useParams } from "react-router-dom"; // @ts-ignore
-import { FreeMode, Navigation, Thumbs } from "swiper";
+import { useParams } from "react-router-dom";
+//@ts-ignore
+import { FreeMode, Navigation, Thumbs } from "swiper"; 
+//@ts-ignore
 import "swiper/css";
+//@ts-ignore
 import "swiper/css/free-mode";
+//@ts-ignore
 import "swiper/css/navigation";
+//@ts-ignore
 import "swiper/css/thumbs";
+import { Product } from "../../../lib/types/product";
+import { createSelector, Dispatch } from "@reduxjs/toolkit";
+import { useDispatch } from "react-redux";
+import { setChosenProduct, setRestaurant } from "./slice";
+//@ts-ignore
+import { retrieveChosenProduct, retrieveRestaurant } from "./selector";
+import { Member } from "../../../lib/types/member";
+
+
+/* RREDUX SLICE & SELECTOR */
+const actionDispatch = (dispatch: Dispatch) => ({
+	setRestaurant: (data: Member) => dispatch(setRestaurant(data)),
+	setChosenProduct: (data: Product) => dispatch(setChosenProduct(data)),
+});
+
+const chosenProductRetriever = createSelector(
+	retrieveChosenProduct,
+	(chosenProduct) => ({ chosenProduct }),
+)
+const restaurantRetriever = createSelector(retrieveRestaurant, (restaurant) => ({
+	restaurant,
+}))
+
 
 export default function ChosenProduct() {
   return (
