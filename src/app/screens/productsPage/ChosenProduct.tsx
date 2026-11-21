@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import Rating from "@mui/material/Rating";
 import { useParams } from "react-router-dom";
 //@ts-ignore
-import { FreeMode, Navigation, Thumbs } from "swiper"; 
+import { FreeMode, Navigation, Thumbs } from "swiper";
 //@ts-ignore
 import "swiper/css";
 //@ts-ignore
@@ -26,32 +26,39 @@ import { Member } from "../../../lib/types/member";
 import ProductService from "../../services/ProductService";
 import MemberService from "../../services/MemberService";
 import { serverApi } from "../../../lib/config";
-
+import { CartItem } from "../../../lib/types/search";
 
 /* RREDUX SLICE & SELECTOR */
 const actionDispatch = (dispatch: Dispatch) => ({
-	setRestaurant: (data: Member) => dispatch(setRestaurant(data)),
-	setChosenProduct: (data: Product) => dispatch(setChosenProduct(data)),
+  setRestaurant: (data: Member) => dispatch(setRestaurant(data)),
+  setChosenProduct: (data: Product) => dispatch(setChosenProduct(data)),
 });
+interface ChosenProductProp {
+  onAdd: (item: CartItem) => void;
+}
 
 const chosenProductRetriever = createSelector(
-	retrieveChosenProduct,
-	(chosenProduct) => ({ chosenProduct }),
-)
-const restaurantRetriever = createSelector(retrieveRestaurant, (restaurant) => ({
-	restaurant,
-}))
+  retrieveChosenProduct,
+  (chosenProduct) => ({ chosenProduct }),
+);
+const restaurantRetriever = createSelector(
+  retrieveRestaurant,
+  (restaurant) => ({
+    restaurant,
+  }),
+);
 
-
-export default function ChosenProduct() {
-  const {productId} = useParams<{ productId: string }>();
+export default function ChosenProduct(props: ChosenProductProp) {
+  const { onAdd } = props;
+  const { productId } = useParams<{ productId: string }>();
   const { setChosenProduct, setRestaurant } = actionDispatch(useDispatch());
   const { chosenProduct } = useSelector(chosenProductRetriever);
   const { restaurant } = useSelector(restaurantRetriever);
 
   useEffect(() => {
     const product = new ProductService();
-    product.getProduct(productId)
+    product
+      .getProduct(productId)
       .then((data) => {
         setChosenProduct(data);
       })
@@ -59,17 +66,18 @@ export default function ChosenProduct() {
         console.log("Error, getProduct:", err);
       });
 
-      const member = new MemberService();
-      member.getRestaurant()
-        .then((data) => {
-          setRestaurant(data);
-        })
-        .catch((err) => {
-          console.log("Error, getRestaurant:", err);
-        });
+    const member = new MemberService();
+    member
+      .getRestaurant()
+      .then((data) => {
+        setRestaurant(data);
+      })
+      .catch((err) => {
+        console.log("Error, getRestaurant:", err);
+      });
   }, [productId]);
 
-  if(!chosenProduct) return null;
+  if (!chosenProduct) return null;
   return (
     <div className={"chosen-product"}>
       <Box className={"title"}>Product Detail</Box>
@@ -82,21 +90,21 @@ export default function ChosenProduct() {
             modules={[FreeMode, Navigation, Thumbs]}
             className="swiper-area"
           >
-            {chosenProduct?.productImages.map(
-              (ele: string, index: number) => {
-                const imagePath = `${serverApi}/${ele}`
-                return (
-                  <SwiperSlide key={index}>
-                    <img className="slider-image" src={imagePath} />
-                  </SwiperSlide>
-                );
-              },
-            )}
+            {chosenProduct?.productImages.map((ele: string, index: number) => {
+              const imagePath = `${serverApi}/${ele}`;
+              return (
+                <SwiperSlide key={index}>
+                  <img className="slider-image" src={imagePath} />
+                </SwiperSlide>
+              );
+            })}
           </Swiper>
         </Stack>
         <Stack className={"chosen-product-info"}>
           <Box className={"info-box"}>
-            <strong className={"product-name"}>{chosenProduct?.productName}</strong>
+            <strong className={"product-name"}>
+              {chosenProduct?.productName}
+            </strong>
             <span className={"resto-name"}>{restaurant?.memberNick}</span>
             <span className={"resto-name"}>{restaurant?.memberPhone}</span>
             <Box className={"rating-box"}>
@@ -108,7 +116,11 @@ export default function ChosenProduct() {
                 </div>
               </div>
             </Box>
-            <p className={"product-desc"}>{chosenProduct?.productDesc ? chosenProduct?.productDesc : "No Description"}</p>
+            <p className={"product-desc"}>
+              {chosenProduct?.productDesc
+                ? chosenProduct?.productDesc
+                : "No Description"}
+            </p>
             <Divider height="1" width="100%" bg="#000000" />
             <div className={"product-price"}>
               <span>Price:</span>

@@ -17,17 +17,21 @@ import ProductService from "../../services/ProductService";
 import { serverApi } from "../../../lib/config";
 import { ProductCollection } from "../../../lib/enums/product.enum";
 import { useHistory } from "react-router-dom";
+import { CartItem } from "../../../lib/types/search";
 
 /* RREDUX SLICE & SELECTOR */
 const actionDispatch = (dispatch: Dispatch) => ({
   setProducts: (data: Product[]) => dispatch(setProducts(data)),
 });
-
+interface ProductsProp {
+  onAdd: (item: CartItem) => void;
+}
 const productsRetriever = createSelector(retrieveProducts, (products) => ({
   products,
 }));
 
-export default function Products() {
+export default function Products(props: ProductsProp) {
+  const { onAdd } = props;
   const { setProducts } = actionDispatch(useDispatch());
   const { products } = useSelector(productsRetriever);
   const [productSearch, setProductSearch] = useState<ProductInquiry>({
@@ -83,8 +87,8 @@ export default function Products() {
   };
 
   const chooseDishHandler = (id: string) => {
-		history.push(`/products/${id}`)
-	}
+    history.push(`/products/${id}`);
+  };
 
   return (
     <div className={"products"}>
@@ -245,13 +249,30 @@ export default function Products() {
                       ? product.productVolume + " l"
                       : product.productSize + " size";
                   return (
-                    <Stack key={product._id} className={"product-card"} onClick={() => chooseDishHandler(product._id)}>
+                    <Stack
+                      key={product._id}
+                      className={"product-card"}
+                      onClick={() => chooseDishHandler(product._id)}
+                    >
                       <Stack
                         className={"product-img"}
                         sx={{ backgroundImage: `url(${imagePath})` }}
                       >
                         <div className={"product-sale"}>{sizeVolume}</div>
-                        <Button className={"shop-btn"}>
+                        <Button
+                          className={"shop-btn"}
+                          onClick={(e) => {
+                            console.log("Button Pressed");
+                            onAdd({
+                              _id: product._id,
+                              quantity: 1,
+                              name: product.productName,
+                              price: product.productPrice,
+                              image: product.productImages[0],
+                            });
+                            e.stopPropagation();
+                          }}
+                        >
                           <img
                             src={"/icons/shopping-cart.svg"}
                             style={{ display: "flex" }}
