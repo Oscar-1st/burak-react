@@ -80,8 +80,8 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
   const handleSignupRequest = async () => {
     try {
       const isFulfill =
-        memmberNick !== "" && memberPhone !== "" && memberPassword !== "";
-      if (!isFulfill) throw new Error(Messages.err3);
+        memmberNick === "" && memberPhone === "" && memberPassword === "";
+      if (isFulfill) throw new Error(Messages.err3);
 
       const signupInput: MemberInput = {
         memberNick: memmberNick,
@@ -104,8 +104,8 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
   const handleLoginRequest = async () => {
     try {
       const isFulfill =
-        memmberNick !== "" && memberPassword !== "";
-      if (!isFulfill) throw new Error(Messages.err3);
+        memmberNick === "" && memberPassword === "";
+      if (isFulfill) throw new Error(Messages.err3);
 
       const loginInput: LoginInput = {
         memberNick: memmberNick,
